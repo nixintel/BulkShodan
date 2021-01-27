@@ -2,7 +2,7 @@
 
 Uses Shodan's Python library to perform bulk lookup of IPs. Converts the default Shodan JSON to CSV.
 
-Shodan API key required. If you only have a basic Shodan API this script can burn through it pretty quickly as well as hitting the rate limit.
+Shodan API key required. If you only have a basic Shodan API this script can burn through it pretty quickly as well as hitting the rate limit very rapidly.
 
 ### Installation
 
