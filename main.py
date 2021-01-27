@@ -4,8 +4,6 @@ import ipaddress
 import argparse
 import pandas as pd
 
-pd.set_option('display.max_columns', 500)
-
 
 def get_ipv4_list(multi_ips):
     """Formats IP addresses inputted as a list. Converts CIDR to list of single IPs"""
@@ -25,20 +23,20 @@ def get_ipv4_list(multi_ips):
     return ip_list
 
 
-def shodan_query(api_key,ip):
+def shodan_query(api_key, ip):
     """Takes IP as input, queries Shodan and returns host info as JSON"""
 
     api = shodan.Shodan(api_key)
     responses = []
 
-    try:
-        for i in ips:
+    for i in ip:
+        try:
             result = api.host(i)
             print('Querying Shodan for ' + str(i))
             responses.append(result)
 
-    except Exception as e:
-        print('Error %s' %e)
+        except shodan.APIError as e:
+            print('Error %s' %e)
 
     return responses
 
@@ -50,12 +48,10 @@ def shodan_df(raw_data):
     df = pd.json_normalize(raw_data, ['data'], errors='ignore')
 
     # Rearrange columns so ip_str is first
-    df = df.drop(['ip', 'http.html'], axis=1)
+    df = df.drop(['ip', 'data'], axis=1)
     lead_col = ['ip_str']
     new_cols = lead_col + (df.columns.drop(lead_col).tolist())
     df = df[new_cols]
-
-    print(df.head())
 
     return df
 
@@ -79,6 +75,7 @@ def get_args():
 if __name__ == "__main__":
 
     # Set API key
+
     key = s.shodan_key
 
     # Arguments
